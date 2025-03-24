@@ -1,4 +1,4 @@
-import { ConfirmState, ModalState } from "@/config/types";
+import { ConfirmState } from "@/config/types";
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 

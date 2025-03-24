@@ -6,7 +6,7 @@ import Pagination from "@/lib/pagination";
 import Select from "@/lib/select";
 import { openDrawer } from "@/redux/slices/drawer-slice";
 import Image from "next/image";
-import React, { useState } from "react";
+import React from "react";
 import { useDispatch } from "react-redux";
 import { Tooltip } from "react-tooltip";
 
@@ -21,19 +21,6 @@ const Students = () => {
     };
 
     dispatch(openDrawer(drawer));
-  };
-
-  const [date, setDate] = useState(null);
-
-  const handleChange = (newDate: any) => {
-    setDate(newDate);
-  };
-
-  const configs = {
-    isRange: false, // Set to false to disable range selection
-    display: {
-      months: 1, // Display only one month
-    },
   };
 
   return (

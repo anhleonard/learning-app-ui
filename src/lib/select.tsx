@@ -206,6 +206,7 @@ const Select = ({
           role="combobox"
           aria-expanded={isOpen}
           aria-haspopup="listbox"
+          aria-controls="select-options"
         >
           <div className="h-5 w-full flex items-center gap-2">
             <span

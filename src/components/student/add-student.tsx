@@ -3,11 +3,9 @@ import DatePicker from "@/lib/date-picker";
 import Divider from "@/lib/divider";
 import Select from "@/lib/select";
 import TextField from "@/lib/textfield";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
-interface Props {}
-
-const AddStudent = ({}: Props) => {
+const AddStudent = () => {
   const [date, setDate] = useState("");
 
   return (

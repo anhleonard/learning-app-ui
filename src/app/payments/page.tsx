@@ -145,10 +145,6 @@ const Payments = () => {
     downloadAllImagesAsZip();
   };
 
-  const handleDownloadBillImage = (bill: any) => {
-    return "expression";
-  };
-
   return (
     <div>
       <div className="flex flex-row items-center gap-2 mb-8">
@@ -198,7 +194,7 @@ const Payments = () => {
               <thead className={`text-grey-c700 uppercase bg-primary-c50`}>
                 <tr className="hover:bg-success-c50 hover:text-grey-c700 font-bold">
                   <th className="pl-3 py-4">STT</th>
-                  <th className="px-1 py-4">Student's name</th>
+                  <th className="px-1 py-4">Student&apos;s name</th>
                   <th className="px-1 py-4">Total sessions</th>
                   <th className="px-1 py-4">Tuition/ month</th>
                   <th className="px-1 py-4">Debt</th>

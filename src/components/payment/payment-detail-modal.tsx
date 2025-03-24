@@ -7,6 +7,7 @@ import Html2CanvasPro from "html2canvas-pro";
 
 interface Props {
   show: boolean;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   handleCloseModal: any;
 }
 

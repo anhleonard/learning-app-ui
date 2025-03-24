@@ -34,7 +34,7 @@ const classes = [
 const HistoryPath = () => {
   return (
     <div className="max-w-md mx-auto grid grid-cols-2 gap-8 pt-2 py-6">
-      {classes.map((item, index) => (
+      {classes.map((item) => (
         <div key={item.id} className="flex items-start space-x-4">
           {/* Số thứ tự */}
           <div

@@ -2,7 +2,6 @@ import { closeDrawer } from "@/redux/slices/drawer-slice";
 import { RootState } from "@/redux/store";
 import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
-import Divider from "./divider";
 import { useEffect } from "react";
 
 export default function Drawer() {

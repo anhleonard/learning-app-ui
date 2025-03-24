@@ -9,9 +9,7 @@ import TextField from "@/lib/textfield";
 import Image from "next/image";
 import React from "react";
 
-interface Props {}
-
-const AddClass = ({}: Props) => {
+const AddClass = () => {
   return (
     <div className="flex flex-col gap-4">
       <TextField

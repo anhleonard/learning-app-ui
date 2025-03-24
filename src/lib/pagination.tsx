@@ -1,7 +1,6 @@
 import { useState } from "react";
 import Select from "./select";
 import Image from "next/image";
-import Button from "./button";
 
 const rowsPerPageOptions = [
   {
@@ -24,6 +23,7 @@ const rowsPerPageOptions = [
 
 interface Props {
   totalItems: number;
+  //eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
   onPageChange: Function;
   rowsEachPage?: number;
   nowPage?: number;

@@ -2,10 +2,12 @@
 
 interface Props {
   isChecked: boolean;
+  //eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
   onChange?: Function;
 }
 
 export default function Checkbox({ isChecked, onChange }: Props) {
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleChange = (e: any) => {
     const newValue = e.target.checked;
     onChange?.(newValue);

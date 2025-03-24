@@ -24,7 +24,7 @@ interface YearStyle {
   value: number;
 }
 
-const generateYears = (topYear: number, direction: string = "forward"): YearStyle[] => {
+const generateYears = (topYear: number): YearStyle[] => {
   const years: YearStyle[] = [];
   const step = 1;
 
@@ -50,7 +50,7 @@ const getAllDaysInMonth = (
   if (startDays === 0 || endDays === 0) return [];
   const totalDays = new Date(year, month, 0).getDate();
 
-  let daysRange = Array.from({ length: totalDays }, (_, i) => {
+  const daysRange = Array.from({ length: totalDays }, (_, i) => {
     const date = new Date(year, month - 1, i + 1);
     return {
       day: i + 1,
@@ -118,6 +118,7 @@ const formatDatePicker = (dateObj: { currentDate: number; currentMonth: string; 
 
 interface Props {
   defaultDate?: string;
+  //eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
   onChange?: Function;
   label?: string;
   error?: boolean;
@@ -140,6 +141,7 @@ const DatePicker = ({ defaultDate, onChange, label, error = false, helperText = 
   const [listYear, setListYear] = useState<Array<YearStyle>>([{ label: "0", value: 0 }]);
   const [direction, setDirection] = useState<"forward" | "backward" | null>(null);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [renderDays, setRenderDays] = useState<any>([]);
 
   const [currentDate, setCurrentDate] = useState(fixedDate);
@@ -185,10 +187,11 @@ const DatePicker = ({ defaultDate, onChange, label, error = false, helperText = 
 
   useEffect(() => {
     if (direction) {
-      const generatedYears = generateYears(topYear, direction);
+      const generatedYears = generateYears(topYear);
       setListYear(generatedYears);
       setDirection(null);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [topYear]);
 
   useEffect(() => {
@@ -225,6 +228,7 @@ const DatePicker = ({ defaultDate, onChange, label, error = false, helperText = 
       });
       onChange(formattedDate);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentDate]);
 
   const handleBackMonth = () => {
@@ -340,19 +344,20 @@ const DatePicker = ({ defaultDate, onChange, label, error = false, helperText = 
   }, []);
 
   return (
-    <div ref={datePickerRef} className="relative w-full text-gray-700">
-      <label
-        onClick={handleLabelClick}
-        className={`absolute left-4 font-semibold transition-all duration-200 z-10 cursor-text -top-[8px] bg-white px-1 text-xs
+    <div>
+      <div ref={datePickerRef} className="relative w-full text-gray-700">
+        <label
+          onClick={handleLabelClick}
+          className={`absolute left-4 font-semibold transition-all duration-200 z-10 cursor-text -top-[8px] bg-white px-1 text-xs
             ${isOpen ? "text-primary-c900" : "text-grey-c200"}
             ${error ? "bg-gradient-to-b from-transparent to-support-c10" : ""}
           `}
-      >
-        {label ?? "Default label"}
-      </label>
-      <input
-        type="text"
-        className={`relative transition duration-300 py-3 pl-4 pr-14 w-full border-[2px] 
+        >
+          {label ?? "Default label"}
+        </label>
+        <input
+          type="text"
+          className={`relative transition duration-300 py-3 pl-4 pr-14 w-full border-[2px] 
              dark:bg-slate-800 dark:text-white/80 dark:border-slate-600 tracking-wide text-sm placeholder-grey-c400 
              text-grey-c900 disabled:opacity-40 disabled:cursor-not-allowed rounded-[20px] 
              ring-0 focus:ring-0 focus:outline-none shadow-none focus:shadow-none cursor-pointer ${
@@ -362,138 +367,144 @@ const DatePicker = ({ defaultDate, onChange, label, error = false, helperText = 
                  ? "border-support-c100 bg-support-c10"
                  : "border-grey-c200 hover:border-primary-c300"
              }`}
-        placeholder="DD-M-YYYY"
-        autoComplete="off"
-        role="presentation"
-        value={defaultDate}
-        onClick={handleOpen}
-        readOnly
-      />
+          placeholder="DD-M-YYYY"
+          autoComplete="off"
+          role="presentation"
+          value={defaultDate}
+          onClick={handleOpen}
+          readOnly
+        />
 
-      <button
-        type="button"
-        onClick={handleOpen}
-        className="absolute right-0 h-full px-3 text-gray-400 focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed"
-      >
-        <div className="w-[21px] h-[21px] flex justify-center items-center">
-          {<Image src="/icons/calendar-icon.svg" alt="calendar-icon" width={21} height={21} />}
-        </div>
-      </button>
-      <div
-        className={`transition-all duration-300 absolute z-20 mt-[-24px] text-sm lg:text-xs 2xl:text-sm translate-y-4 ${
-          isOpen ? "block" : "hidden"
-        }`}
-      >
-        <div className="mt-2.5 shadow-sm border border-primary-c500 px-1 py-0.5 bg-white dark:bg-slate-800 dark:text-white dark:border-slate-600 rounded-lg">
-          <div className="flex items-stretch flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-1.5 md:pl-1 pr-2 lg:pr-1">
-            <div className="w-[296px]">
-              <div className="flex items-center space-x-1.5 border border-grey-c200 dark:border-gray-700 rounded-md px-2 py-1.5 mt-2">
-                <div className={`${isSelectMonth ? "hidden" : ""}`}>
-                  <button
-                    type="button"
-                    onClick={isSelectYear ? handleBackYear : handleBackMonth}
-                    className="dark:text-white/70 dark:hover:bg-white/10 dark:focus:bg-white/10 transition-all duration-300 hover:bg-grey-c50 rounded-full p-[0.45rem] focus:ring-1 focus:ring-blue-500/50 focus:bg-blue-100/50"
-                  >
-                    <svg
-                      className="h-5 w-5"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth="1.5"
-                      stroke="currentColor"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"></path>
-                    </svg>
-                  </button>
-                </div>
-                <div className="flex flex-1 items-center space-x-1.5">
-                  <div className="w-1/2">
-                    <button
-                      onClick={openSelectMonth}
-                      type="button"
-                      className="w-full tracking-wide dark:text-white/70 dark:hover:bg-white/10 dark:focus:bg-white/10 transition-all duration-300 px-3 py-[0.55rem] uppercase hover:bg-primary-c100 rounded-md focus:ring-1 focus:ring-blue-500/50 focus:bg-blue-100/50"
-                    >
-                      {currentMonth}
-                    </button>
-                  </div>
-                  <div className="w-1/2">
+        <button
+          type="button"
+          onClick={handleOpen}
+          className="absolute right-0 h-full px-3 text-gray-400 focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed"
+        >
+          <div className="w-[21px] h-[21px] flex justify-center items-center">
+            {<Image src="/icons/calendar-icon.svg" alt="calendar-icon" width={21} height={21} />}
+          </div>
+        </button>
+        <div
+          className={`transition-all duration-300 absolute z-20 mt-[-24px] text-sm lg:text-xs 2xl:text-sm translate-y-4 ${
+            isOpen ? "block" : "hidden"
+          }`}
+        >
+          <div className="mt-2.5 shadow-sm border border-primary-c500 px-1 py-0.5 bg-white dark:bg-slate-800 dark:text-white dark:border-slate-600 rounded-lg">
+            <div className="flex items-stretch flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-1.5 md:pl-1 pr-2 lg:pr-1">
+              <div className="w-[296px]">
+                <div className="flex items-center space-x-1.5 border border-grey-c200 dark:border-gray-700 rounded-md px-2 py-1.5 mt-2">
+                  <div className={`${isSelectMonth ? "hidden" : ""}`}>
                     <button
                       type="button"
-                      onClick={openSelectYear}
-                      className="w-full tracking-wide dark:text-white/70 dark:hover:bg-white/10 dark:focus:bg-white/10 transition-all duration-300 px-3 py-[0.55rem] uppercase hover:bg-primary-c100 rounded-md focus:ring-1 focus:ring-blue-500/50 focus:bg-blue-100/50"
+                      onClick={isSelectYear ? handleBackYear : handleBackMonth}
+                      className="dark:text-white/70 dark:hover:bg-white/10 dark:focus:bg-white/10 transition-all duration-300 hover:bg-grey-c50 rounded-full p-[0.45rem] focus:ring-1 focus:ring-blue-500/50 focus:bg-blue-100/50"
                     >
-                      {currentYear}
+                      <svg
+                        className="h-5 w-5"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="1.5"
+                        stroke="currentColor"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"></path>
+                      </svg>
+                    </button>
+                  </div>
+                  <div className="flex flex-1 items-center space-x-1.5">
+                    <div className="w-1/2">
+                      <button
+                        onClick={openSelectMonth}
+                        type="button"
+                        className="w-full tracking-wide dark:text-white/70 dark:hover:bg-white/10 dark:focus:bg-white/10 transition-all duration-300 px-3 py-[0.55rem] uppercase hover:bg-primary-c100 rounded-md focus:ring-1 focus:ring-blue-500/50 focus:bg-blue-100/50"
+                      >
+                        {currentMonth}
+                      </button>
+                    </div>
+                    <div className="w-1/2">
+                      <button
+                        type="button"
+                        onClick={openSelectYear}
+                        className="w-full tracking-wide dark:text-white/70 dark:hover:bg-white/10 dark:focus:bg-white/10 transition-all duration-300 px-3 py-[0.55rem] uppercase hover:bg-primary-c100 rounded-md focus:ring-1 focus:ring-blue-500/50 focus:bg-blue-100/50"
+                      >
+                        {currentYear}
+                      </button>
+                    </div>
+                  </div>
+                  <div className={`${isSelectMonth ? "hidden" : ""}`}>
+                    <button
+                      type="button"
+                      onClick={isSelectYear ? handleNextYear : handleNextMonth}
+                      className="dark:text-white/70 dark:hover:bg-white/10 dark:focus:bg-white/10 transition-all duration-300 hover:bg-grey-c50 rounded-full p-[0.45rem] focus:ring-1 focus:ring-blue-500/50 focus:bg-blue-100/50"
+                    >
+                      <svg
+                        className="h-5 w-5"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="1.5"
+                        stroke="currentColor"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"></path>
+                      </svg>
                     </button>
                   </div>
                 </div>
-                <div className={`${isSelectMonth ? "hidden" : ""}`}>
-                  <button
-                    type="button"
-                    onClick={isSelectYear ? handleNextYear : handleNextMonth}
-                    className="dark:text-white/70 dark:hover:bg-white/10 dark:focus:bg-white/10 transition-all duration-300 hover:bg-grey-c50 rounded-full p-[0.45rem] focus:ring-1 focus:ring-blue-500/50 focus:bg-blue-100/50"
-                  >
-                    <svg
-                      className="h-5 w-5"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth="1.5"
-                      stroke="currentColor"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"></path>
-                    </svg>
-                  </button>
-                </div>
+                {/* paste here */}
+                {isSelectMonth ? (
+                  <AllMonths />
+                ) : isSelectYear ? (
+                  <AllYears />
+                ) : (
+                  <div className="px-0.5 sm:px-2 mt-0.5 min-h-[285px]">
+                    <div className="grid grid-cols-7 border-b border-gray-300 dark:border-gray-700 py-2">
+                      <div className="tracking-wide text-grey-c500 text-center">Sun</div>
+                      <div className="tracking-wide text-grey-c500 text-center">Mon</div>
+                      <div className="tracking-wide text-grey-c500 text-center">Tue</div>
+                      <div className="tracking-wide text-grey-c500 text-center">Wed</div>
+                      <div className="tracking-wide text-grey-c500 text-center">Thu</div>
+                      <div className="tracking-wide text-grey-c500 text-center">Fri</div>
+                      <div className="tracking-wide text-grey-c500 text-center">Sat</div>
+                    </div>
+                    <div className="grid grid-cols-7 gap-y-0.5 my-1">
+                      {renderDays.length &&
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        renderDays.map((item: any, index: number) => {
+                          return (
+                            <button
+                              key={index}
+                              type="button"
+                              className={`flex items-center justify-center w-12 h-12 lg:w-10 lg:h-10  rounded-full transition-all ${
+                                !item.isBefore && !item.isNext ? "text-grey-c900" : "text-grey-c300"
+                              } ${
+                                item?.day === currentDate &&
+                                !item.isBefore &&
+                                !item.isNext &&
+                                currentMonth === fixedMonth &&
+                                currentYear === fixedYear
+                                  ? "bg-primary-c100"
+                                  : "hover:bg-primary-c50 active:bg-primary-c100"
+                              }`}
+                              onClick={() =>
+                                handleChangeDate(
+                                  item?.day,
+                                  item?.isBefore ? "before" : item?.isNext ? "next" : "current",
+                                )
+                              }
+                            >
+                              {item?.day}
+                            </button>
+                          );
+                        })}
+                    </div>
+                  </div>
+                )}
               </div>
-              {/* paste here */}
-              {isSelectMonth ? (
-                <AllMonths />
-              ) : isSelectYear ? (
-                <AllYears />
-              ) : (
-                <div className="px-0.5 sm:px-2 mt-0.5 min-h-[285px]">
-                  <div className="grid grid-cols-7 border-b border-gray-300 dark:border-gray-700 py-2">
-                    <div className="tracking-wide text-grey-c500 text-center">Sun</div>
-                    <div className="tracking-wide text-grey-c500 text-center">Mon</div>
-                    <div className="tracking-wide text-grey-c500 text-center">Tue</div>
-                    <div className="tracking-wide text-grey-c500 text-center">Wed</div>
-                    <div className="tracking-wide text-grey-c500 text-center">Thu</div>
-                    <div className="tracking-wide text-grey-c500 text-center">Fri</div>
-                    <div className="tracking-wide text-grey-c500 text-center">Sat</div>
-                  </div>
-                  <div className="grid grid-cols-7 gap-y-0.5 my-1">
-                    {renderDays.length &&
-                      renderDays.map((item: any, index: number) => {
-                        return (
-                          <button
-                            key={index}
-                            type="button"
-                            className={`flex items-center justify-center w-12 h-12 lg:w-10 lg:h-10  rounded-full transition-all ${
-                              !item.isBefore && !item.isNext ? "text-grey-c900" : "text-grey-c300"
-                            } ${
-                              item?.day === currentDate &&
-                              !item.isBefore &&
-                              !item.isNext &&
-                              currentMonth === fixedMonth &&
-                              currentYear === fixedYear
-                                ? "bg-primary-c100"
-                                : "hover:bg-primary-c50 active:bg-primary-c100"
-                            }`}
-                            onClick={() =>
-                              handleChangeDate(item?.day, item?.isBefore ? "before" : item?.isNext ? "next" : "current")
-                            }
-                          >
-                            {item?.day}
-                          </button>
-                        );
-                      })}
-                  </div>
-                </div>
-              )}
             </div>
           </div>
         </div>
       </div>
+      {helperText ? <div className="text-xs mt-0.5 pl-1 text-support-c300">{helperText}</div> : null}
     </div>
   );
 };
