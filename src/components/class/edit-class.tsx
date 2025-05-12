@@ -9,7 +9,7 @@ import TextField from "@/lib/textfield";
 import Image from "next/image";
 import React from "react";
 
-const AddClass = () => {
+const EditClass = () => {
   return (
     <div className="flex flex-col gap-4">
       <TextField
@@ -17,7 +17,6 @@ const AddClass = () => {
         defaultValue="Anh Leonard"
         error={true}
         helperText="Please enter an valid value"
-        inputClassName="font-questrial"
       />
       <Select
         label="Sessions per week"
@@ -84,4 +83,4 @@ const AddClass = () => {
   );
 };
 
-export default AddClass;
+export default EditClass;

@@ -70,6 +70,16 @@ export default {
           c100: "#FFBC97",
           c50: "#FFCEB3",
         },
+        dk: {
+          primary: {
+            c50: "#F4F9FB",
+            c700: "#2D7D9F",
+          },
+          grey: {
+            c700: "#575757",
+            c800: "#323232",
+          },
+        },
       },
       spacing: {
         "1": "4px",
@@ -83,6 +93,10 @@ export default {
         "8": "32px",
         "9": "36px",
         "10": "40px",
+      },
+      fontFamily: {
+        questrial: ['var(--font-questrial)', 'sans-serif'],
+        urbanist: ['Urbanist', 'sans-serif'],
       },
       // fontWeight: {
       //   thin: "100",

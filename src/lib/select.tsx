@@ -84,28 +84,104 @@ const Select = ({
     };
   }, []);
 
-  useEffect(() => {
+  // useEffect(() => {
+  //   if (isOpen && selectRef.current) {
+  //     const rect = selectRef.current.getBoundingClientRect();
+
+  //     if (customPosition) {
+  //       setDropdownPosition(customPosition);
+  //     } else {
+  //       const offsetY = position === "top" ? 12 : 1;
+  //       if (position === "top") {
+  //         setDropdownPosition({
+  //           top: rect.top + window.scrollY - (optionsRef.current?.offsetHeight || 0) - offsetY,
+  //           left: rect.left + window.scrollX + offsetX,
+  //         });
+  //       } else {
+  //         setDropdownPosition({
+  //           top: rect.bottom + window.scrollY + offsetY,
+  //           left: rect.left + window.scrollX + offsetX,
+  //         });
+  //       }
+  //     }
+
+  //     setDropdownWidth(rect.width);
+  //   }
+  // }, [isOpen, position, customPosition, offsetX, offsetY]);
+
+  const updateDropdownPosition = () => {
     if (isOpen && selectRef.current) {
       const rect = selectRef.current.getBoundingClientRect();
 
       if (customPosition) {
         setDropdownPosition(customPosition);
       } else {
-        const offsetY = position === "top" ? 12 : 1;
+        const positionOffsetY = position === "top" ? 12 : 1;
         if (position === "top") {
           setDropdownPosition({
-            top: rect.top + window.scrollY - (optionsRef.current?.offsetHeight || 0) - offsetY,
+            top: rect.top + window.scrollY - (optionsRef.current?.offsetHeight || 0) - positionOffsetY,
             left: rect.left + window.scrollX + offsetX,
           });
         } else {
           setDropdownPosition({
-            top: rect.bottom + window.scrollY + offsetY,
+            top: rect.bottom + window.scrollY + positionOffsetY,
             left: rect.left + window.scrollX + offsetX,
           });
         }
       }
 
       setDropdownWidth(rect.width);
+    }
+  };
+
+  useEffect(() => {
+    if (isOpen) {
+      // Initial update
+      updateDropdownPosition();
+
+      // Track scroll changes
+      const handleScroll = () => {
+        updateDropdownPosition();
+      };
+
+      // Track size changes
+      const handleResize = () => {
+        updateDropdownPosition();
+      };
+
+      // Track zoom changes (actually track resize events)
+      const handleZoom = () => {
+        updateDropdownPosition();
+      };
+
+      // Register event listeners
+      window.addEventListener("scroll", handleScroll, true);
+      window.addEventListener("resize", handleResize);
+      window.addEventListener("zoom", handleZoom);
+      window.addEventListener("orientationchange", handleResize);
+
+      // Use MutationObserver to track DOM changes that might affect the position
+      const observer = new MutationObserver((mutations) => {
+        updateDropdownPosition();
+      });
+
+      if (selectRef.current && selectRef.current.parentElement) {
+        observer.observe(selectRef.current.parentElement, {
+          childList: true,
+          subtree: true,
+          attributes: true,
+          characterData: true,
+        });
+      }
+
+      // Cleanup
+      return () => {
+        window.removeEventListener("scroll", handleScroll, true);
+        window.removeEventListener("resize", handleResize);
+        window.removeEventListener("zoom", handleZoom);
+        window.removeEventListener("orientationchange", handleResize);
+        observer.disconnect();
+      };
     }
   }, [isOpen, position, customPosition, offsetX, offsetY]);
 

@@ -12,10 +12,14 @@ import { Tooltip } from "react-tooltip";
 import Html2CanvasPro from "html2canvas-pro";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
+import { ModalState } from "@/config/types";
+import { useDispatch } from "react-redux";
+import { openModal } from "@/redux/slices/modal-slice";
+import ConfirmBillModal from "@/components/payment/confirm-bill-modal";
 
 const billsData = [
   {
-    studentName: "Nguyễn Hoàng Anh",
+    studentName: "Christopher Smith",
     month: "01/2024",
     attendanceDates: ["08/01/2024", "10/01/2024", "12/01/2024"],
     totalSessions: 3,
@@ -25,7 +29,7 @@ const billsData = [
     totalAmount: 200000,
   },
   {
-    studentName: "Trần Minh Tú",
+    studentName: "Matthew Williams",
     month: "02/2024",
     attendanceDates: ["02/02/2024", "05/02/2024", "07/02/2024", "10/02/2024"],
     totalSessions: 4,
@@ -35,7 +39,7 @@ const billsData = [
     totalAmount: 340000,
   },
   {
-    studentName: "Lê Thu Hằng",
+    studentName: "Ashley Anderson",
     month: "03/2024",
     attendanceDates: ["03/03/2024", "06/03/2024", "09/03/2024", "12/03/2024", "15/03/2024"],
     totalSessions: 5,
@@ -45,7 +49,7 @@ const billsData = [
     totalAmount: 275000,
   },
   {
-    studentName: "Phạm Thanh Tùng",
+    studentName: "Elizabeth Thomas",
     month: "04/2024",
     attendanceDates: ["01/04/2024", "04/04/2024", "07/04/2024"],
     totalSessions: 3,
@@ -55,7 +59,7 @@ const billsData = [
     totalAmount: 260000,
   },
   {
-    studentName: "Hoàng Văn Nam",
+    studentName: "Daniel Martinez",
     month: "05/2024",
     attendanceDates: ["05/05/2024", "07/05/2024", "10/05/2024", "12/05/2024", "15/05/2024"],
     totalSessions: 5,
@@ -65,7 +69,7 @@ const billsData = [
     totalAmount: 400000,
   },
   {
-    studentName: "Đặng Bảo Ngọc",
+    studentName: "James Taylor",
     month: "06/2024",
     attendanceDates: ["02/06/2024", "05/06/2024", "08/06/2024"],
     totalSessions: 3,
@@ -75,7 +79,7 @@ const billsData = [
     totalAmount: 260000,
   },
   {
-    studentName: "Bùi Quang Huy",
+    studentName: "Sarah Wilson",
     month: "07/2024",
     attendanceDates: ["01/07/2024", "03/07/2024", "05/07/2024", "07/07/2024"],
     totalSessions: 4,
@@ -84,9 +88,40 @@ const billsData = [
     debt: -150000,
     totalAmount: 450000,
   },
+  {
+    studentName: "Michael Johnson",
+    month: "07/2024",
+    attendanceDates: ["02/07/2024", "04/07/2024", "06/07/2024"],
+    totalSessions: 3,
+    feePerSession: 75000,
+    totalMonth: 225000,
+    debt: 0,
+    totalAmount: 225000,
+  },
+  {
+    studentName: "Emily Davis",
+    month: "07/2024",
+    attendanceDates: ["01/07/2024", "03/07/2024", "05/07/2024", "08/07/2024"],
+    totalSessions: 4,
+    feePerSession: 75000,
+    totalMonth: 300000,
+    debt: 50000,
+    totalAmount: 250000,
+  },
+  {
+    studentName: "Jessica Brown",
+    month: "07/2024",
+    attendanceDates: ["01/07/2024", "03/07/2024", "07/07/2024", "09/07/2024", "11/07/2024"],
+    totalSessions: 5,
+    feePerSession: 75000,
+    totalMonth: 375000,
+    debt: -100000,
+    totalAmount: 475000,
+  },
 ];
 
 const Payments = () => {
+  const dispatch = useDispatch();
   const [show, setShow] = useState(false);
 
   const handleOpenModal = () => {
@@ -102,7 +137,7 @@ const Payments = () => {
     const folder = zip.folder("bills");
 
     if (!folder) {
-      console.error("Không thể tạo thư mục ZIP!");
+      console.error("Cannot create ZIP folder!");
       return;
     }
 
@@ -116,17 +151,17 @@ const Payments = () => {
       try {
         const canvas = await Html2CanvasPro(div);
 
-        // Dùng `toDataURL()` thay thế `toBlob()` nếu bị lỗi
-        const imgData = canvas.toDataURL("image/png").split(",")[1]; // Bỏ đi "data:image/png;base64,"
+        // Bỏ đi "data:image/png;base64,"
+        const imgData = canvas.toDataURL("image/png").split(",")[1];
 
         if (!imgData) {
-          console.error(`Không thể tạo ảnh cho bill-${index + 1}`);
+          console.error(`Cannot create image for bill-${index + 1}`);
           return;
         }
 
         folder.file(`${billsData[index].studentName}.png`, imgData, { base64: true });
       } catch (error) {
-        console.error(`Lỗi khi xử lý bill-${index}:`, error);
+        console.error(`Error when processing bill-${index}:`, error);
       }
     });
 
@@ -143,6 +178,37 @@ const Payments = () => {
 
   const handleDownloadAll = () => {
     downloadAllImagesAsZip();
+  };
+
+  const handleDownloadBillImage = async (id: string, studentName: string) => {
+    const div = document.getElementById(id);
+    if (!div) {
+      console.error("Element paymentDiv not found!");
+      return;
+    }
+    try {
+      const canvas = await Html2CanvasPro(div);
+      canvas.toBlob((blob) => {
+        if (!blob) {
+          console.error("Cannot create Blob from canvas!");
+          return;
+        }
+        saveAs(blob, `${studentName}.png`);
+      }, "image/png");
+    } catch (error) {
+      console.error("Error when handling:", error);
+    }
+  };
+
+  const handleConfirmBill = (totalPayment: string) => {
+    const modal: ModalState = {
+      isOpen: true,
+      title: "Update payment information",
+      content: <ConfirmBillModal totalPayment={totalPayment} />,
+      className: "max-w-lg",
+    };
+
+    dispatch(openModal(modal));
   };
 
   return (
@@ -194,7 +260,7 @@ const Payments = () => {
               <thead className={`text-grey-c700 uppercase bg-primary-c50`}>
                 <tr className="hover:bg-success-c50 hover:text-grey-c700 font-bold">
                   <th className="pl-3 py-4">STT</th>
-                  <th className="px-1 py-4">Student&apos;s name</th>
+                  <th className="px-1 py-4">Student</th>
                   <th className="px-1 py-4">Total sessions</th>
                   <th className="px-1 py-4">Tuition/ month</th>
                   <th className="px-1 py-4">Debt</th>
@@ -206,9 +272,9 @@ const Payments = () => {
               <tbody>
                 {billsData.map((bill, index) => {
                   return (
-                    <tr key={index} className="hover:bg-primary-c10 hover:text-grey-c700">
+                    <tr key={index} className="hover:bg-primary-c10">
                       <th className="pl-3 py-4">{index + 1}</th>
-                      <th className="px-1 py-4">{bill.studentName}</th>
+                      <th className="px-1 py-4 font-questrial text-grey-c900 text-[15px]">{bill.studentName}</th>
                       <th className="px-1 py-4">{bill.totalSessions}</th>
                       <th className="px-1 py-4">
                         <span className="font-bold text-[#FE9800]">{formatCurrency(bill.totalMonth)} VND</span>
@@ -225,9 +291,7 @@ const Payments = () => {
                       </th>
                       <th className="px-1 py-4">
                         <span className="font-bold text-primary-c900">
-                          {bill.debt > 0
-                            ? formatCurrency(bill.totalMonth + bill.debt)
-                            : formatCurrency(bill.totalMonth - bill.debt)}
+                          {formatCurrency(bill.totalMonth + bill.debt)}
                           VND
                         </span>
                       </th>
@@ -245,14 +309,35 @@ const Payments = () => {
                             <Image src="/icons/detail-icon.svg" alt="view-icon" width={24} height={24} />
                           </button>
                           <Tooltip id="view-icon" />
-                          <button data-tooltip-id="download-icon" data-tooltip-content="Download">
+                          <button
+                            data-tooltip-id="download-icon"
+                            data-tooltip-content="Download"
+                            onClick={() => handleDownloadBillImage(`paymentDiv-${index}`, bill.studentName)}
+                          >
                             <Image src="/icons/download-icon.svg" alt="download-icon" width={24} height={24} />
                           </button>
                           <Tooltip id="download-icon" />
-                          <button data-tooltip-id="sent-icon" data-tooltip-content="Send">
-                            <Image src="/icons/sent-icon.svg" alt="sent-icon" width={24} height={24} />
-                          </button>
-                          <Tooltip id="sent-icon" />
+                          {index % 2 === 0 ? (
+                            <>
+                              <button
+                                data-tooltip-id="sent-icon"
+                                data-tooltip-content="Sent"
+                                onClick={() => {
+                                  handleConfirmBill(bill.totalAmount.toString());
+                                }}
+                              >
+                                <Image src="/icons/sent-icon.svg" alt="sent-icon" width={24} height={24} />
+                              </button>
+                              <Tooltip id="sent-icon" />
+                            </>
+                          ) : (
+                            <>
+                              <button data-tooltip-id="unsent-icon" data-tooltip-content="Send">
+                                <Image src="/icons/unsent-icon.svg" alt="unsent-icon" width={24} height={24} />
+                              </button>
+                              <Tooltip id="unsent-icon" />
+                            </>
+                          )}
                         </div>
                       </th>
                     </tr>

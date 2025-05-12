@@ -1,12 +1,40 @@
+import { ConfirmState, ModalState } from "@/config/types";
 import Button from "@/lib/button";
 import DatePicker from "@/lib/date-picker";
 import Divider from "@/lib/divider";
 import Select from "@/lib/select";
 import TextField from "@/lib/textfield";
-import React, { useState } from "react";
+import { openConfirm } from "@/redux/slices/confirm-slice";
+import { closeLoading, openLoading } from "@/redux/slices/loading-slice";
+import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 
-const AddStudent = () => {
+interface Props {  
+  studentId: number;
+}
+
+const EditStudent = ({ studentId }: Props) => {
+  const dispatch = useDispatch();
   const [date, setDate] = useState("");
+
+  const getStudent = async (studentId: number) => {
+    try {
+      dispatch(openLoading());
+      await new Promise((resolve) => {
+        setTimeout(() => {
+          console.log('test get student')
+        }, 3000);
+      });
+    } catch (error) {
+      
+    } finally {
+      dispatch(closeLoading());
+    }
+  }
+
+  useEffect(() => {
+    getStudent(studentId);
+  }, [studentId]);
 
   return (
     <div className="flex flex-col gap-5">
@@ -46,4 +74,4 @@ const AddStudent = () => {
   );
 };
 
-export default AddStudent;
+export default EditStudent;

@@ -123,7 +123,7 @@ const PaymentDetailModal = ({ show, handleCloseModal }: Props) => {
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
             >
-              <div className="fixed inset-0 bg-black/40 dark:bg-black/70" />
+              <div className="fixed inset-0 bg-black/40" />
             </TransitionChild>
 
             <TransitionChild
@@ -197,8 +197,16 @@ const PaymentDetailModal = ({ show, handleCloseModal }: Props) => {
                                   <th className="px-1 py-4">50.000 VND</th>
                                 </tr>
                                 <tr className="hover:bg-primary-c10 hover:text-grey-c700 text-grey-c900">
-                                  <th className="pl-3 py-4">Tổng tiền</th>
+                                  <th className="pl-3 py-4">Học phí tháng</th>
                                   <th className="px-1 py-4">350.000 VND</th>
+                                </tr>
+                                <tr className="hover:bg-primary-c10 hover:text-grey-c700 text-grey-c900">
+                                  <th className="pl-3 py-4">Tiền nợ</th>
+                                  <th className="px-1 py-4">100.000 VND</th>
+                                </tr>
+                                <tr className="hover:bg-primary-c10 hover:text-grey-c700 text-grey-c900">
+                                  <th className="pl-3 py-4">Tổng tiền</th>
+                                  <th className="px-1 py-4">450.000 VND</th>
                                 </tr>
                                 <tr className="hover:bg-primary-c10 hover:text-grey-c700 text-grey-c900">
                                   <th className="pl-3 py-4">Ngân hàng</th>

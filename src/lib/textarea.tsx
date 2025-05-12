@@ -10,6 +10,7 @@ interface TextAreaProps {
   rows?: number;
   error?: boolean;
   helperText?: string;
+  inputClassName?: string;
 }
 
 const TextArea = ({
@@ -21,6 +22,7 @@ const TextArea = ({
   rows = 3,
   error = false,
   helperText = "",
+  inputClassName = "",
 }: TextAreaProps) => {
   const [isFocused, setIsFocused] = useState(false);
   const [value, setValue] = useState(defaultValue);
@@ -80,6 +82,7 @@ const TextArea = ({
                 ? "border-support-c100 bg-support-c10"
                 : "border-grey-c200 group-hover:border-primary-c300"
             }
+            ${inputClassName}
           `}
         />
       </div>

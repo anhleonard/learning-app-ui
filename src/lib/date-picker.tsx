@@ -357,8 +357,7 @@ const DatePicker = ({ defaultDate, onChange, label, error = false, helperText = 
         </label>
         <input
           type="text"
-          className={`relative transition duration-300 py-3 pl-4 pr-14 w-full border-[2px] 
-             dark:bg-slate-800 dark:text-white/80 dark:border-slate-600 tracking-wide text-sm placeholder-grey-c400 
+          className={`relative transition duration-300 py-3 pl-4 pr-14 w-full border-[2px] tracking-wide text-sm placeholder-grey-c400 
              text-grey-c900 disabled:opacity-40 disabled:cursor-not-allowed rounded-[20px] 
              ring-0 focus:ring-0 focus:outline-none shadow-none focus:shadow-none cursor-pointer ${
                isOpen && !error
@@ -389,15 +388,15 @@ const DatePicker = ({ defaultDate, onChange, label, error = false, helperText = 
             isOpen ? "block" : "hidden"
           }`}
         >
-          <div className="mt-2.5 shadow-sm border border-primary-c500 px-1 py-0.5 bg-white dark:bg-slate-800 dark:text-white dark:border-slate-600 rounded-lg">
+          <div className="mt-2.5 shadow-sm border border-primary-c500 px-1 py-0.5 bg-white rounded-lg">
             <div className="flex items-stretch flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-1.5 md:pl-1 pr-2 lg:pr-1">
               <div className="w-[296px]">
-                <div className="flex items-center space-x-1.5 border border-grey-c200 dark:border-gray-700 rounded-md px-2 py-1.5 mt-2">
+                <div className="flex items-center space-x-1.5 border border-grey-c200 rounded-md px-2 py-1.5 mt-2">
                   <div className={`${isSelectMonth ? "hidden" : ""}`}>
                     <button
                       type="button"
                       onClick={isSelectYear ? handleBackYear : handleBackMonth}
-                      className="dark:text-white/70 dark:hover:bg-white/10 dark:focus:bg-white/10 transition-all duration-300 hover:bg-grey-c50 rounded-full p-[0.45rem] focus:ring-1 focus:ring-blue-500/50 focus:bg-blue-100/50"
+                      className="transition-all duration-300 hover:bg-grey-c50 rounded-full p-[0.45rem] focus:ring-1 focus:ring-blue-500/50 focus:bg-blue-100/50"
                     >
                       <svg
                         className="h-5 w-5"
@@ -416,7 +415,7 @@ const DatePicker = ({ defaultDate, onChange, label, error = false, helperText = 
                       <button
                         onClick={openSelectMonth}
                         type="button"
-                        className="w-full tracking-wide dark:text-white/70 dark:hover:bg-white/10 dark:focus:bg-white/10 transition-all duration-300 px-3 py-[0.55rem] uppercase hover:bg-primary-c100 rounded-md focus:ring-1 focus:ring-blue-500/50 focus:bg-blue-100/50"
+                        className="w-full tracking-wide transition-all duration-300 px-3 py-[0.55rem] uppercase hover:bg-primary-c100 rounded-md focus:ring-1 focus:ring-blue-500/50 focus:bg-blue-100/50"
                       >
                         {currentMonth}
                       </button>
@@ -425,7 +424,7 @@ const DatePicker = ({ defaultDate, onChange, label, error = false, helperText = 
                       <button
                         type="button"
                         onClick={openSelectYear}
-                        className="w-full tracking-wide dark:text-white/70 dark:hover:bg-white/10 dark:focus:bg-white/10 transition-all duration-300 px-3 py-[0.55rem] uppercase hover:bg-primary-c100 rounded-md focus:ring-1 focus:ring-blue-500/50 focus:bg-blue-100/50"
+                        className="w-full tracking-wide transition-all duration-300 px-3 py-[0.55rem] uppercase hover:bg-primary-c100 rounded-md focus:ring-1 focus:ring-blue-500/50 focus:bg-blue-100/50"
                       >
                         {currentYear}
                       </button>
@@ -435,7 +434,7 @@ const DatePicker = ({ defaultDate, onChange, label, error = false, helperText = 
                     <button
                       type="button"
                       onClick={isSelectYear ? handleNextYear : handleNextMonth}
-                      className="dark:text-white/70 dark:hover:bg-white/10 dark:focus:bg-white/10 transition-all duration-300 hover:bg-grey-c50 rounded-full p-[0.45rem] focus:ring-1 focus:ring-blue-500/50 focus:bg-blue-100/50"
+                      className="transition-all duration-300 hover:bg-grey-c50 rounded-full p-[0.45rem] focus:ring-1 focus:ring-blue-500/50 focus:bg-blue-100/50"
                     >
                       <svg
                         className="h-5 w-5"
@@ -457,7 +456,7 @@ const DatePicker = ({ defaultDate, onChange, label, error = false, helperText = 
                   <AllYears />
                 ) : (
                   <div className="px-0.5 sm:px-2 mt-0.5 min-h-[285px]">
-                    <div className="grid grid-cols-7 border-b border-gray-300 dark:border-gray-700 py-2">
+                    <div className="grid grid-cols-7 border-b border-gray-300 py-2">
                       <div className="tracking-wide text-grey-c500 text-center">Sun</div>
                       <div className="tracking-wide text-grey-c500 text-center">Mon</div>
                       <div className="tracking-wide text-grey-c500 text-center">Tue</div>

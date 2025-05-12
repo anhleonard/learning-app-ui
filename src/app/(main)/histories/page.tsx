@@ -83,9 +83,9 @@ const Histories = () => {
                 </tr>
               </thead>
               <tbody>
-                <tr className="hover:bg-primary-c10 hover:text-grey-c700">
+                <tr className="hover:bg-primary-c10">
                   <th className="pl-3 py-4">1</th>
-                  <th className="px-1 py-4">Anh Leonard</th>
+                  <th className="px-1 py-4 font-questrial text-grey-c900 text-[15px]">Trần Thị Anh</th>
                   <th className="px-1 py-4">20/02/2002</th>
                   <th className="px-1 py-4">MMA Class</th>
                   <th className="px-1 py-4">--</th>

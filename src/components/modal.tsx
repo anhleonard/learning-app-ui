@@ -38,7 +38,7 @@ const Modal = () => {
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
             >
-              <div className="fixed inset-0 bg-black/40 dark:bg-black/70" />
+              <div className="fixed inset-0 bg-black/40" />
             </TransitionChild>
 
             <TransitionChild
@@ -55,7 +55,7 @@ const Modal = () => {
                   modalData.className || "max-w-3xl"
                 }`}
               >
-                <div className="relative flex-shrink-0 px-6 py-4 border-b border-neutral-200 dark:border-neutral-800 text-center">
+                <div className="relative flex-shrink-0 px-6 py-4 border-b border-neutral-200 text-center">
                   <DialogTitle className="text-lg leading-6 text-success-c800 font-semibold text-left">
                     {modalData.title}
                   </DialogTitle>

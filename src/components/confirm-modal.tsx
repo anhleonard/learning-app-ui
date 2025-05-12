@@ -29,7 +29,7 @@ const ConfirmModal = () => {
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
             >
-              <div className="fixed inset-0 bg-black/40 dark:bg-black/70" />
+              <div className="fixed inset-0 bg-black/40" />
             </TransitionChild>
 
             <TransitionChild
@@ -44,7 +44,7 @@ const ConfirmModal = () => {
               <DialogPanel
                 className={`relative transform overflow-hidden rounded-2xl bg-white text-left align-middle shadow-xl transition-all w-full max-w-lg`}
               >
-                <div className="relative flex-shrink-0 px-6 py-6 dark:border-neutral-800 text-center">
+                <div className="relative flex-shrink-0 px-6 py-6 text-center">
                   <span className="absolute right-3 top-3">
                     <button
                       className="hover:bg-grey-c50 p-1.5 rounded-full active:bg-grey-c100 transition-transform duration-300"

@@ -50,8 +50,8 @@ const HistoryPath = () => {
             <h3 className={`text-lg font-bold mb-2 ${item.active ? "text-primary-c900" : "text-grey-c400"}`}>
               {item.title}
             </h3>
-            <p className="text-grey-c300 text-xs mb-2">{item.date}</p>
-            <p className="text-grey-c300 text-xs">Total sessions: {item.sessions}</p>
+            <p className={`text-xs mb-2 ${item.active ? "text-primary-c900" : "text-grey-c300"}`}>{item.date}</p>
+            <p className={`text-xs ${item.active ? "text-primary-c900" : "text-grey-c300"}`}>Total sessions: {item.sessions}</p>
           </div>
         </div>
       ))}
