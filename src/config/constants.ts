@@ -75,21 +75,25 @@ export const Days = [
   },
 ];
 
-export const Times = [
-  {
-    label: "13:00",
-    value: "13:00",
-  },
-  {
-    label: "14:00",
-    value: "14:00",
-  },
-  {
-    label: "15:00",
-    value: "15:00",
-  },
-  {
-    label: "16:00",
-    value: "16:00",
-  },
-];
+const generateTimeSlots = (startHour: number, endHour: number, intervalMinutes: number = 30) => {
+  const slots = [];
+  const totalMinutes = (endHour - startHour) * 60;
+  const intervals = Math.floor(totalMinutes / intervalMinutes);
+
+  for (let i = 0; i <= intervals; i++) {
+    const minutes = i * intervalMinutes;
+    const hour = Math.floor((startHour * 60 + minutes) / 60);
+    const minute = (startHour * 60 + minutes) % 60;
+    
+    const timeString = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+    slots.push({
+      label: timeString,
+      value: timeString,
+    });
+  }
+
+  return slots;
+};
+
+// generateTimeSlots(5, 22, 15) cho khoảng cách 15 phút thay vì 30 phút
+export const Times = generateTimeSlots(5, 22);

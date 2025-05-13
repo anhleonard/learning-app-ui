@@ -126,28 +126,245 @@ interface Props {
 }
 
 const DatePicker = ({ defaultDate, onChange, label, error = false, helperText = "" }: Props) => {
-  const [day, month, year] = defaultDate ? defaultDate.split("-") : moment(new Date()).format("DD-MM-YYYY").split("-");
-  const fixedYear = parseInt(year) ?? new Date().getFullYear();
-  const fixedMonth =
-    abbreviationMonths[parseInt(month) - 1] ??
-    Months.find((item) => item.realValue === new Date().getMonth() + 1)?.value;
-  const fixedDate = parseInt(day) ?? new Date().getDate();
+  const today = new Date();
+
+  // Initialize states based on defaultDate or current date
+  const getInitialDate = () => {
+    if (defaultDate) {
+      const [day, month, year] = defaultDate.split("-");
+      const parsedYear = parseInt(year);
+      const parsedMonth = parseInt(month);
+      const parsedDay = parseInt(day);
+
+      console.log("Parsing defaultDate:", {
+        defaultDate,
+        parsedDay,
+        parsedMonth,
+        parsedYear,
+        isValid:
+          !isNaN(parsedYear) &&
+          !isNaN(parsedMonth) &&
+          !isNaN(parsedDay) &&
+          parsedMonth >= 1 &&
+          parsedMonth <= 12 &&
+          parsedDay >= 1 &&
+          parsedDay <= 31,
+      });
+
+      if (
+        !isNaN(parsedYear) &&
+        !isNaN(parsedMonth) &&
+        !isNaN(parsedDay) &&
+        parsedMonth >= 1 &&
+        parsedMonth <= 12 &&
+        parsedDay >= 1 &&
+        parsedDay <= 31
+      ) {
+        const monthValue = abbreviationMonths[parsedMonth - 1];
+        console.log("Setting initial date from defaultDate:", {
+          day: parsedDay,
+          month: monthValue,
+          year: parsedYear,
+        });
+        return {
+          day: parsedDay,
+          month: monthValue,
+          year: parsedYear,
+        };
+      }
+    }
+    console.log("Using current date as initial date:", {
+      day: today.getDate(),
+      month: abbreviationMonths[today.getMonth()],
+      year: today.getFullYear(),
+    });
+    return {
+      day: today.getDate(),
+      month: abbreviationMonths[today.getMonth()],
+      year: today.getFullYear(),
+    };
+  };
+
+  const initialDate = getInitialDate();
+  console.log("Final initialDate:", initialDate);
 
   const [isSelectMonth, setIsSelectMonth] = useState(false);
-  const [currentMonth, setCurrentMonth] = useState(fixedMonth);
+  const [currentMonth, setCurrentMonth] = useState(initialDate.month);
   const [isSelectYear, setIsSelectYear] = useState(false);
-  const [currentYear, setCurrentYear] = useState(fixedYear);
-  const [topYear, setTopYear] = useState(currentYear);
+  const [currentYear, setCurrentYear] = useState(initialDate.year);
+  const [topYear, setTopYear] = useState(initialDate.year);
   const [listYear, setListYear] = useState<Array<YearStyle>>([{ label: "0", value: 0 }]);
   const [direction, setDirection] = useState<"forward" | "backward" | null>(null);
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [renderDays, setRenderDays] = useState<any>([]);
-
-  const [currentDate, setCurrentDate] = useState(fixedDate);
-
+  const [currentDate, setCurrentDate] = useState(initialDate.day);
   const [isOpen, setIsOpen] = useState(false);
   const datePickerRef = useRef<HTMLDivElement>(null);
+
+  // Memoize current date info for highlighting today
+  const currentDateInfo = React.useMemo(
+    () => ({
+      day: today.getDate(),
+      monthIndex: today.getMonth(),
+      year: today.getFullYear(),
+    }),
+    [],
+  );
+
+  // Add state to track selected date
+  const [selectedDate, setSelectedDate] = useState<{ day: number; month: string; year: number } | null>(null);
+
+  // Initialize selected date from defaultDate
+  useEffect(() => {
+    if (defaultDate) {
+      const [day, month, year] = defaultDate.split("-");
+      const parsedYear = parseInt(year);
+      const parsedMonth = parseInt(month);
+      const parsedDay = parseInt(day);
+
+      if (
+        !isNaN(parsedYear) &&
+        !isNaN(parsedMonth) &&
+        !isNaN(parsedDay) &&
+        parsedMonth >= 1 &&
+        parsedMonth <= 12 &&
+        parsedDay >= 1 &&
+        parsedDay <= 31
+      ) {
+        setSelectedDate({
+          day: parsedDay,
+          month: abbreviationMonths[parsedMonth - 1],
+          year: parsedYear,
+        });
+      }
+    } else {
+      setSelectedDate(null);
+    }
+  }, [defaultDate]);
+
+  // Update states when defaultDate changes
+  useEffect(() => {
+    if (defaultDate) {
+      const [day, month, year] = defaultDate.split("-");
+      const parsedYear = parseInt(year);
+      const parsedMonth = parseInt(month);
+      const parsedDay = parseInt(day);
+
+      console.log("Updating states from defaultDate change:", {
+        defaultDate,
+        parsedDay,
+        parsedMonth,
+        parsedYear,
+      });
+
+      if (
+        !isNaN(parsedYear) &&
+        !isNaN(parsedMonth) &&
+        !isNaN(parsedDay) &&
+        parsedMonth >= 1 &&
+        parsedMonth <= 12 &&
+        parsedDay >= 1 &&
+        parsedDay <= 31
+      ) {
+        const monthValue = abbreviationMonths[parsedMonth - 1];
+        setCurrentYear(parsedYear);
+        setTopYear(parsedYear);
+        setCurrentMonth(monthValue);
+        setCurrentDate(parsedDay);
+      }
+    } else {
+      console.log("Resetting to current date");
+      setCurrentYear(today.getFullYear());
+      setTopYear(today.getFullYear());
+      setCurrentMonth(abbreviationMonths[today.getMonth()]);
+      setCurrentDate(today.getDate());
+    }
+  }, [defaultDate]);
+
+  // Initialize years list
+  useEffect(() => {
+    if (!isSelectYear) {
+      const generatedYears = generateYears(currentYear);
+      setListYear(generatedYears);
+      setTopYear(currentYear);
+    }
+  }, [currentYear, isSelectYear]);
+
+  // Update days when month or year changes
+  useEffect(() => {
+    const foundedMonth = Months.find((item) => item.value === currentMonth);
+    if (foundedMonth) {
+      const filteredDays = getFull42Days(foundedMonth?.realValue, currentYear);
+      setRenderDays(filteredDays);
+    }
+  }, [currentMonth, currentYear]);
+
+  const handleDateChange = React.useCallback(
+    (date: number, month: string, year: number) => {
+      if (onChange) {
+        const formattedDate = formatDatePicker({
+          currentDate: date,
+          currentMonth: month,
+          currentYear: year,
+        });
+        onChange(formattedDate);
+      }
+    },
+    [onChange],
+  );
+
+  const handleChangeDate = (value: number, stateMonth: "before" | "next" | "current") => {
+    if (stateMonth === "current") {
+      setCurrentDate(value);
+      setSelectedDate({ day: value, month: currentMonth, year: currentYear });
+      handleDateChange(value, currentMonth, currentYear);
+      setIsOpen(false);
+    } else if (stateMonth === "before") {
+      const currentIndex = Months.findIndex((month) => month.value === currentMonth);
+      if (currentIndex === 0) {
+        setCurrentMonth(Months[11].value);
+        setCurrentYear((prevYear) => prevYear - 1);
+        setSelectedDate({ day: value, month: Months[11].value, year: currentYear - 1 });
+        handleDateChange(value, Months[11].value, currentYear - 1);
+      } else {
+        setCurrentMonth(Months[currentIndex - 1].value);
+        setSelectedDate({ day: value, month: Months[currentIndex - 1].value, year: currentYear });
+        handleDateChange(value, Months[currentIndex - 1].value, currentYear);
+      }
+      setCurrentDate(value);
+      setIsOpen(false);
+    } else if (stateMonth === "next") {
+      const currentIndex = Months.findIndex((month) => month.value === currentMonth);
+      if (currentIndex === 11) {
+        setCurrentMonth(Months[0].value);
+        setCurrentYear((prevYear) => prevYear + 1);
+        setSelectedDate({ day: value, month: Months[0].value, year: currentYear + 1 });
+        handleDateChange(value, Months[0].value, currentYear + 1);
+      } else {
+        setCurrentMonth(Months[currentIndex + 1].value);
+        setSelectedDate({ day: value, month: Months[currentIndex + 1].value, year: currentYear });
+        handleDateChange(value, Months[currentIndex + 1].value, currentYear);
+      }
+      setCurrentDate(value);
+      setIsOpen(false);
+    }
+  };
+
+  const isSelectedDate = React.useCallback(
+    (day: number, month: string, year: number, isBefore: boolean, isNext: boolean) => {
+      if (!selectedDate || isBefore || isNext) return false;
+      return day === selectedDate.day && month === selectedDate.month && year === selectedDate.year;
+    },
+    [selectedDate],
+  );
+
+  const isCurrentDate = React.useCallback(
+    (day: number, month: string, year: number, isBefore: boolean, isNext: boolean) => {
+      if (isBefore || isNext) return false;
+      const monthIndex = Months.findIndex((m) => m.value === month);
+      return day === currentDateInfo.day && monthIndex === currentDateInfo.monthIndex && year === currentDateInfo.year;
+    },
+    [currentDateInfo],
+  );
 
   const handleOpen = () => {
     setIsOpen((pre) => !pre);
@@ -211,26 +428,6 @@ const DatePicker = ({ defaultDate, onChange, label, error = false, helperText = 
     }
   }, [isSelectYear, currentYear]);
 
-  useEffect(() => {
-    const foundedMonth = Months.find((item) => item.value === currentMonth);
-    if (foundedMonth) {
-      const filteredDays = getFull42Days(foundedMonth?.realValue, currentYear);
-      setRenderDays(filteredDays);
-    }
-  }, [currentMonth, currentYear]);
-
-  useEffect(() => {
-    if (currentMonth && currentYear && currentDate && onChange) {
-      const formattedDate = formatDatePicker({
-        currentDate: currentDate,
-        currentMonth: currentMonth,
-        currentYear: currentYear,
-      });
-      onChange(formattedDate);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentDate]);
-
   const handleBackMonth = () => {
     const currentIndex = Months.findIndex((month) => month.value === currentMonth);
     if (currentIndex === 0) {
@@ -252,33 +449,6 @@ const DatePicker = ({ defaultDate, onChange, label, error = false, helperText = 
     } else {
       // Tiến lên 1 tháng
       setCurrentMonth(Months[currentIndex + 1].value);
-    }
-  };
-
-  const handleChangeDate = (value: number, stateMonth: "before" | "next" | "current") => {
-    if (stateMonth === "current") {
-      setCurrentDate(value);
-      setIsOpen(false);
-    } else if (stateMonth === "before") {
-      setCurrentDate(value);
-      const currentIndex = Months.findIndex((month) => month.value === currentMonth);
-      if (currentIndex === 0) {
-        setCurrentMonth(Months[11].value);
-        setCurrentYear((prevYear) => prevYear - 1);
-      } else {
-        setCurrentMonth(Months[currentIndex - 1].value);
-      }
-      setIsOpen(false);
-    } else if (stateMonth === "next") {
-      setCurrentDate(value);
-      const currentIndex = Months.findIndex((month) => month.value === currentMonth);
-      if (currentIndex === 11) {
-        setCurrentMonth(Months[0].value);
-        setCurrentYear((prevYear) => prevYear + 1);
-      } else {
-        setCurrentMonth(Months[currentIndex + 1].value);
-      }
-      setIsOpen(false);
     }
   };
 
@@ -467,21 +637,33 @@ const DatePicker = ({ defaultDate, onChange, label, error = false, helperText = 
                     </div>
                     <div className="grid grid-cols-7 gap-y-0.5 my-1">
                       {renderDays.length &&
-                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
                         renderDays.map((item: any, index: number) => {
+                          const isToday = isCurrentDate(
+                            item?.day,
+                            currentMonth,
+                            currentYear,
+                            item?.isBefore,
+                            item?.isNext,
+                          );
+                          const isSelected = isSelectedDate(
+                            item?.day,
+                            currentMonth,
+                            currentYear,
+                            item?.isBefore,
+                            item?.isNext,
+                          );
+
                           return (
                             <button
                               key={index}
                               type="button"
-                              className={`flex items-center justify-center w-12 h-12 lg:w-10 lg:h-10  rounded-full transition-all ${
+                              className={`flex items-center justify-center w-12 h-12 lg:w-10 lg:h-10 rounded-full transition-all ${
                                 !item.isBefore && !item.isNext ? "text-grey-c900" : "text-grey-c300"
                               } ${
-                                item?.day === currentDate &&
-                                !item.isBefore &&
-                                !item.isNext &&
-                                currentMonth === fixedMonth &&
-                                currentYear === fixedYear
-                                  ? "bg-primary-c100"
+                                isSelected
+                                  ? "bg-primary-c100 border-[1px] border-primary-c600"
+                                  : isToday
+                                  ? "bg-grey-c100 border border-grey-c300"
                                   : "hover:bg-primary-c50 active:bg-primary-c100"
                               }`}
                               onClick={() =>

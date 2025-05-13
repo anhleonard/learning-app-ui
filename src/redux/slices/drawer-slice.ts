@@ -14,6 +14,8 @@ export const drawerSlice = createSlice({
   reducers: {
     closeDrawer: (state) => {
       state.isOpen = false;
+      state.title = "";
+      state.content = "";
     },
     openDrawer: (state, action: PayloadAction<ModalState>) => {
       state.isOpen = true;

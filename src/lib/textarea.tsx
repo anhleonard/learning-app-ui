@@ -11,6 +11,8 @@ interface TextAreaProps {
   error?: boolean;
   helperText?: string;
   inputClassName?: string;
+  value?: string;
+  onBlur?: () => void;
 }
 
 const TextArea = ({
@@ -23,9 +25,11 @@ const TextArea = ({
   error = false,
   helperText = "",
   inputClassName = "",
+  value: controlledValue,
+  onBlur,
 }: TextAreaProps) => {
   const [isFocused, setIsFocused] = useState(false);
-  const [value, setValue] = useState(defaultValue);
+  const [internalValue, setInternalValue] = useState(defaultValue);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
@@ -42,14 +46,23 @@ const TextArea = ({
   }, []);
 
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setValue(event.target.value);
-    onChange?.(event.target.value);
+    const newValue = event.target.value;
+    setInternalValue(newValue);
+    onChange?.(newValue);
+  };
+
+  const handleBlur = () => {
+    setIsFocused(false);
+    onBlur?.();
   };
 
   const handleLabelClick = () => {
     setIsFocused(true);
     inputRef.current?.focus();
   };
+
+  // Use controlled value if provided, otherwise use internal state
+  const displayValue = controlledValue ?? internalValue;
 
   return (
     <div>
@@ -58,7 +71,7 @@ const TextArea = ({
         <label
           onClick={handleLabelClick}
           className={`absolute left-4 text-sm font-semibold transition-all duration-300 z-10 cursor-text
-            ${isFocused || value ? "-top-[8px] bg-white px-1 text-xs" : "left-4 top-[14px]"} 
+            ${isFocused || displayValue ? "-top-[8px] bg-white px-1 text-xs" : "left-4 top-[14px]"} 
             ${isFocused ? "text-primary-c900" : "text-grey-c200"}
             ${error ? "bg-gradient-to-b from-transparent to-support-c10" : ""}
           `}
@@ -71,9 +84,10 @@ const TextArea = ({
           cols={cols}
           rows={rows}
           ref={inputRef}
-          value={value}
+          value={displayValue}
           onChange={handleChange}
           onFocus={() => setIsFocused(true)}
+          onBlur={handleBlur}
           className={`w-full border-2 rounded-[20px] px-4 py-3 outline-none transition-all focus:border-primary-c900
             ${
               isFocused && !error

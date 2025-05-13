@@ -99,7 +99,7 @@ const Attendance = () => {
               onChange={(value: string) => {
                 setDate(value);
               }}
-              defaultDate={date}
+              defaultDate={date || "13/05/2025"}
               label="Select date"
             />
             <Select

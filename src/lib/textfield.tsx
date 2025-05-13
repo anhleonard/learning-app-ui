@@ -156,13 +156,31 @@ const TextField = ({
           )}
           <input
             ref={inputRef}
-            type={inputType}
+            type={inputType === "amount" ? "text" : inputType}
             name={name}
             value={displayValue}
             onChange={disabled ? undefined : handleChange}
+            onKeyDown={(e) => {
+              if (inputType === "amount") {
+                // Allow: backspace, delete, tab, escape, enter, arrows
+                if (
+                  [8, 9, 13, 27, 46, 37, 38, 39, 40].includes(e.keyCode) ||
+                  // Allow: Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
+                  (e.keyCode >= 35 && e.keyCode <= 39) ||
+                  (e.ctrlKey && [65, 67, 86, 88].includes(e.keyCode))
+                ) {
+                  return;
+                }
+                // Block any other key that is not a number
+                if (!/[0-9]/.test(e.key)) {
+                  e.preventDefault();
+                }
+              }
+            }}
             onBlur={onBlur}
             onFocus={() => !disabled && setIsFocused(true)}
             disabled={disabled}
+            inputMode={inputType === "amount" ? "numeric" : undefined}
             style={{
               paddingLeft: startIcon ? `calc(1rem + ${startIconWidth}px)` : "1rem",
               paddingRight: endIcon ? `calc(1rem + ${endIconWidth}px)` : "1rem",

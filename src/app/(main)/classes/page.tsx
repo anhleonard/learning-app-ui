@@ -43,7 +43,7 @@ const Classes = () => {
     const drawer: ModalState = {
       isOpen: true,
       title: "Edit class",
-      content: <EditClass />,
+      content: <EditClass classId={1} />,
     };
 
     dispatch(openDrawer(drawer));

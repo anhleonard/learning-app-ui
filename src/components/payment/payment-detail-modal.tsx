@@ -151,7 +151,7 @@ const PaymentDetailModal = ({ show, handleCloseModal }: Props) => {
                       <div className="font-bold text-lg text-grey-c900">HỌC PHÍ THÁNG 01/2024</div>
                       <div className="font-semibold text-lg text-grey-c900">
                         <span className="text-grey-c900 text-sm font-normal pr-2">Tên:</span>
-                        <span className="text-grey-c600 text-sm font-bold">Anh Leonard</span>
+                        <span className="text-grey-c600 text-sm font-bold font-questrial">Hoàng Đỗ Nhật Minh</span>
                       </div>
                       <div className="grid md:grid-cols-2 w-full py-3 gap-4">
                         {/* 1. table 1 */}
@@ -160,8 +160,8 @@ const PaymentDetailModal = ({ show, handleCloseModal }: Props) => {
                             <table className="table-auto w-full text-left relative">
                               <thead className={`text-grey-c700 uppercase bg-primary-c50`}>
                                 <tr className="hover:bg-success-c50 hover:text-grey-c700 font-bold">
-                                  <th className="pl-3 py-4">STT</th>
-                                  <th className="px-1 py-4">Ngày học</th>
+                                  <th className="pl-3 py-4 font-questrial">STT</th>
+                                  <th className="px-1 py-4 font-questrial">Ngày học</th>
                                 </tr>
                               </thead>
                               <tbody>
@@ -182,42 +182,42 @@ const PaymentDetailModal = ({ show, handleCloseModal }: Props) => {
                             <table className="table-auto w-full text-left relative rounded-[10px] overflow-hidden">
                               <thead className={`text-grey-c700 uppercase bg-primary-c50`}>
                                 <tr className="hover:bg-success-c50 hover:text-grey-c700 font-bold">
-                                  <th colSpan={2} className="py-4 text-center">
-                                    Summary
+                                  <th colSpan={2} className="py-4 text-center font-questrial">
+                                    TỔNG KẾT
                                   </th>
                                 </tr>
                               </thead>
                               <tbody>
                                 <tr className="hover:bg-primary-c10 hover:text-grey-c700 text-grey-c900">
-                                  <th className="pl-3 py-4">Tổng số buổi</th>
+                                  <th className="pl-3 py-4 font-questrial">Tổng số buổi</th>
                                   <th className="px-1 py-4">7</th>
                                 </tr>
                                 <tr className="hover:bg-primary-c10 hover:text-grey-c700 text-grey-c900">
-                                  <th className="pl-3 py-4">Học phí/buổi</th>
+                                  <th className="pl-3 py-4 font-questrial">Học phí/buổi</th>
                                   <th className="px-1 py-4">50.000 VND</th>
                                 </tr>
                                 <tr className="hover:bg-primary-c10 hover:text-grey-c700 text-grey-c900">
-                                  <th className="pl-3 py-4">Học phí tháng</th>
+                                  <th className="pl-3 py-4 font-questrial">Học phí tháng</th>
                                   <th className="px-1 py-4">350.000 VND</th>
                                 </tr>
                                 <tr className="hover:bg-primary-c10 hover:text-grey-c700 text-grey-c900">
-                                  <th className="pl-3 py-4">Tiền nợ</th>
+                                  <th className="pl-3 py-4 font-questrial">Tiền nợ</th>
                                   <th className="px-1 py-4">100.000 VND</th>
                                 </tr>
                                 <tr className="hover:bg-primary-c10 hover:text-grey-c700 text-grey-c900">
-                                  <th className="pl-3 py-4">Tổng tiền</th>
+                                  <th className="pl-3 py-4 font-questrial">Tổng tiền</th>
                                   <th className="px-1 py-4">450.000 VND</th>
                                 </tr>
                                 <tr className="hover:bg-primary-c10 hover:text-grey-c700 text-grey-c900">
-                                  <th className="pl-3 py-4">Ngân hàng</th>
+                                  <th className="pl-3 py-4 font-questrial">Ngân hàng</th>
                                   <th className="px-1 py-4">VIB</th>
                                 </tr>
                                 <tr className="hover:bg-primary-c10 hover:text-grey-c700 text-grey-c900">
-                                  <th className="pl-3 py-4">STK</th>
+                                  <th className="pl-3 py-4 font-questrial">STK</th>
                                   <th className="px-1 py-4">002122334</th>
                                 </tr>
                                 <tr className="hover:bg-primary-c10 hover:text-grey-c700 text-grey-c900">
-                                  <th className="pl-3 py-4">Chủ tài khoản</th>
+                                  <th className="pl-3 py-4 font-questrial">Chủ tài khoản</th>
                                   <th className="px-1 py-4">TRẦN THỊ TRÂM</th>
                                 </tr>
                               </tbody>
